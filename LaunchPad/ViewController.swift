@@ -14,6 +14,10 @@ import AVKit
 import SwiftVideoBackground
 import MediaPlayer
 import Alamofire
+import RevealingSplashView
+
+
+let defaults = UserDefaults.standard
 
 class MainLaunchpadViewController: UIViewController ,AVAudioPlayerDelegate {
 
@@ -50,9 +54,11 @@ class MainLaunchpadViewController: UIViewController ,AVAudioPlayerDelegate {
     @IBAction func songSwitchPressed(_ sender: AnyObject) {
         if songSwitch.isOn {
             backgroundVideo.unMuteSong()
+            defaults.set(false, forKey: "switchStatus")
         }
             if songSwitch.isOn == false {
                 backgroundVideo.muteSong()
+                defaults.set(true, forKey: "switchStatus")
 
             }
     }
@@ -61,7 +67,26 @@ class MainLaunchpadViewController: UIViewController ,AVAudioPlayerDelegate {
     @IBAction func songSliderChanged(_ sender: Any) {
         let selectedValue = songSlider.value
         (MPVolumeView().subviews.filter{NSStringFromClass($0.classForCoder) == "MPVolumeSlider"}.first as? UISlider)?.setValue(selectedValue, animated: false)
+        
 
+    }
+    
+    func listenVolumeButton() {
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+            try audioSession.setActive(true)
+            audioSession.addObserver(self, forKeyPath: "outputVolume", options: NSKeyValueObservingOptions.new, context: nil)
+        } catch {
+            print("some error")
+        }
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "outputVolume" {
+            let volume = (change?[NSKeyValueChangeKey.newKey] as! NSNumber).floatValue
+            print(volume.description)
+            songSlider.value = volume
+        }
     }
 
     
@@ -686,6 +711,19 @@ class MainLaunchpadViewController: UIViewController ,AVAudioPlayerDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        
+        let revealingSplashView = RevealingSplashView(iconImage: UIImage(named: "LaunchPadIcon2")!, iconInitialSize: CGSize(width: 150, height: 150), backgroundColor: UIColor.black)
+        
+        revealingSplashView.useCustomIconColor = true
+        revealingSplashView.iconColor = UIColor(red: 45/255, green: 251/255, blue: 255/255, alpha: 1.0)
+        
+        self.view.addSubview(revealingSplashView)
+        
+        revealingSplashView.duration = 1.5
+        revealingSplashView.animationType = .squeezeAndZoomOut
+        revealingSplashView.startAnimation(){
+            print("completed")
+        }
 
         self.navigationItem.setHidesBackButton(true, animated: false)
         
@@ -695,6 +733,11 @@ class MainLaunchpadViewController: UIViewController ,AVAudioPlayerDelegate {
             print(songDurations)
         }
         
+        if defaults.bool(forKey: "switchStatus") == true {
+            songSwitch.isOn = false
+            backgroundVideo.muteSong()
+            
+        }
         
         
     }
@@ -702,14 +745,17 @@ class MainLaunchpadViewController: UIViewController ,AVAudioPlayerDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         
-      
-
+      var currentDeviceVolume = AVAudioSession.sharedInstance().outputVolume
+        songSlider.value = currentDeviceVolume
+        
+        
         
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
     
+        listenVolumeButton()
         
         let navigationImage = UIImage(named: "takeofflogo4")
         navigationItem.titleView = UIImageView(image: navigationImage)

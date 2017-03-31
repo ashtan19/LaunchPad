@@ -30,6 +30,20 @@ class ChangeSoundViewController: UIViewController, UITableViewDelegate, UITableV
     
     var listOfSongsToPlayHere = [String]()
 
+    func playSongSample(songNumber:Int) {
+      
+        do {
+            let url =  Bundle.main.url(forResource: listOfSongsToPlayHere[songNumber], withExtension: "mp4")
+            soundPlayer = try AVAudioPlayer(contentsOf:url!)
+            soundPlayer.prepareToPlay()
+            soundPlayer.play()
+            soundPlayer.numberOfLoops = 0
+            
+        } catch let error as NSError {
+            print(error)
+        }
+
+    }
     
     @IBOutlet weak var soundsTableView: UITableView!
     
@@ -37,66 +51,97 @@ class ChangeSoundViewController: UIViewController, UITableViewDelegate, UITableV
     @IBAction func soundButtonPressed(_ sender: UIButton) {
         if sender.tag == 0 {
             
-            do {
-                let url =  Bundle.main.url(forResource: listOfSongsToPlayHere[0], withExtension: "mp4")
-                soundPlayer = try AVAudioPlayer(contentsOf:url!)
-                soundPlayer.prepareToPlay()
-                soundPlayer.play()
-                soundPlayer.numberOfLoops = 0
-                
-            } catch let error as NSError {
-                print(error)
-            }
+            playSongSample(songNumber: 0)
 
         }
         if sender.tag == 1 {
             
-            do {
-                let url =  Bundle.main.url(forResource: listOfSongsToPlayHere[1], withExtension: "mp4")
-                soundPlayer = try AVAudioPlayer(contentsOf:url!)
-                soundPlayer.prepareToPlay()
-                soundPlayer.play()
-                soundPlayer.numberOfLoops = 0
-                
-            } catch let error as NSError {
-                print(error)
-            }
+            playSongSample(songNumber: 1)
+
         }
         if sender.tag == 2 {
             
-            do {
-                let url =  Bundle.main.url(forResource: listOfSongsToPlayHere[2], withExtension: "mp4")
-                soundPlayer = try AVAudioPlayer(contentsOf:url!)
-                soundPlayer.prepareToPlay()
-                soundPlayer.play()
-                soundPlayer.numberOfLoops = 0
-                
-            } catch let error as NSError {
-                print(error)
-            }
+            playSongSample(songNumber: 2)
+
         }
         if sender.tag == 3 {
-            
+            playSongSample(songNumber: 3)
+
         }
         if sender.tag == 4 {
-            
+            playSongSample(songNumber: 4)
+
         }
         if sender.tag == 5 {
-            
+            playSongSample(songNumber: 5)
+
         }
         if sender.tag == 6 {
-            
+            playSongSample(songNumber: 6)
+
         }
         if sender.tag == 7 {
-            
+            playSongSample(songNumber: 7)
+
         }
         if sender.tag == 8 {
-            
+            playSongSample(songNumber: 8)
+
         }
         if sender.tag == 9 {
+            playSongSample(songNumber: 9)
+
+        }
+        if sender.tag == 10 {
+            playSongSample(songNumber: 10)
+
+        }
+        if sender.tag == 11 {
+            playSongSample(songNumber: 11)
             
         }
-        if sender.tag == 0 {
+        if sender.tag == 12 {
+            playSongSample(songNumber: 12)
+            
+        }
+        if sender.tag == 13 {
+            playSongSample(songNumber: 13)
+            
+        }
+        if sender.tag == 14 {
+            playSongSample(songNumber: 14)
+            
+        }
+        if sender.tag == 15 {
+            playSongSample(songNumber: 15)
+            
+        }
+        if sender.tag == 16 {
+            playSongSample(songNumber: 16)
+            
+        }
+        if sender.tag == 17 {
+            playSongSample(songNumber: 17)
+            
+        }
+        if sender.tag == 18 {
+            playSongSample(songNumber: 18)
+            
+        }
+        if sender.tag == 19 {
+            playSongSample(songNumber: 19)
+            
+        }
+        if sender.tag == 20 {
+            playSongSample(songNumber: 20)
+            
+        }
+        if sender.tag == 21 {
+            playSongSample(songNumber: 21)
+            
+        }
+        if sender.tag == 22 {
+            playSongSample(songNumber: 22)
             
         }
         
@@ -118,7 +163,8 @@ class ChangeSoundViewController: UIViewController, UITableViewDelegate, UITableV
         let cell : SoundCells = (tableView.dequeueReusableCell(withIdentifier: "SoundCell") as? SoundCells)!
         
         cell.soundLabel.text = songTitles[indexPath.row]
-        
+        cell.soundImage.setImage(UIImage(named:"Play-35"), for: .normal)
+        cell.soundImage.contentMode = .scaleAspectFit
         cell.soundImage.tag = indexPath.row
         cell.soundImage.layer.cornerRadius = 30
         
