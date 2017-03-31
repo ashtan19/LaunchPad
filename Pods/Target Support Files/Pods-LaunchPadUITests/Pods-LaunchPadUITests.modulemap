@@ -1,0 +1,6 @@
+framework module Pods_LaunchPadUITests {
+  umbrella header "Pods-LaunchPadUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
