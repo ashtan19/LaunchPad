@@ -30,6 +30,7 @@ class ChangeSoundViewController: UIViewController, UITableViewDelegate, UITableV
     
     var listOfSongsToPlayHere = [String]()
 
+    //Function to play a sound 
     func playSongSample(songNumber:Int) {
       
         do {
@@ -47,10 +48,10 @@ class ChangeSoundViewController: UIViewController, UITableViewDelegate, UITableV
     
     @IBOutlet weak var soundsTableView: UITableView!
     
-
+    
     @IBAction func soundButtonPressed(_ sender: UIButton) {
         if sender.tag == 0 {
-            
+            // noticed a function that was constantly reused, so due to the DRY principle, decided to create a functon and pass in the Int variable to play the different respective sounds. ( 4/5 lines became 1 line)
             playSongSample(songNumber: 0)
 
         }

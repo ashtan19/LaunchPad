@@ -29,6 +29,9 @@ class MainLaunchpadViewController: UIViewController ,AVAudioPlayerDelegate {
     var songForButton = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16"]
     
     var songURL = [URL]()
+    
+    //Took into consideration the use of a for loop for modularization, however AVFoundation library forces you to use
+    //16 player objects to play songs asychronously
     var soundPlayer1 = AVAudioPlayer()
     var soundPlayer2 = AVAudioPlayer()
     var soundPlayer3 = AVAudioPlayer()
@@ -50,6 +53,7 @@ class MainLaunchpadViewController: UIViewController ,AVAudioPlayerDelegate {
     var segueLimiter = 0
     var songDurations = [Double]()
 
+    //control initial background music
     @IBOutlet weak var songSwitch: UISwitch!
     @IBAction func songSwitchPressed(_ sender: AnyObject) {
         if songSwitch.isOn {
@@ -62,7 +66,8 @@ class MainLaunchpadViewController: UIViewController ,AVAudioPlayerDelegate {
 
             }
     }
-        
+    
+    //control volume of device on screen
     @IBOutlet weak var songSlider: UISlider!
     @IBAction func songSliderChanged(_ sender: Any) {
         let selectedValue = songSlider.value
@@ -71,6 +76,7 @@ class MainLaunchpadViewController: UIViewController ,AVAudioPlayerDelegate {
 
     }
     
+    //detect external volume button clicks
     func listenVolumeButton() {
         do {
             let audioSession = AVAudioSession.sharedInstance()
@@ -81,6 +87,7 @@ class MainLaunchpadViewController: UIViewController ,AVAudioPlayerDelegate {
         }
     }
     
+    //change value of slider on UI based on device volume
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "outputVolume" {
             let volume = (change?[NSKeyValueChangeKey.newKey] as! NSNumber).floatValue
@@ -90,10 +97,10 @@ class MainLaunchpadViewController: UIViewController ,AVAudioPlayerDelegate {
     }
 
     
-
+    //change from clicking pad to play a beat to clicking a pad to change the sound
     @IBOutlet weak var playSetSegmentControl: UISegmentedControl!
     
-    //Play Song Function
+    //Play Song Function: use do catch to error handle
     func playSong(whichSoundPlayer: Int, positionOfButton:Int , numberOfLoops : Int) {
         do {
             let url =  Bundle.main.url(forResource: songForButton[positionOfButton], withExtension: "mp4")
@@ -107,6 +114,7 @@ class MainLaunchpadViewController: UIViewController ,AVAudioPlayerDelegate {
         }
     }
     
+    //UIbutton Outlets for every button in interface builder (cannot be further modularized)
     
     @IBOutlet weak var btn1: UIButton!
     @IBAction func btn1Tap(_ sender: UITapGestureRecognizer) {
@@ -667,32 +675,9 @@ class MainLaunchpadViewController: UIViewController ,AVAudioPlayerDelegate {
     @IBOutlet weak var uploadBtn: UIButton!
     @IBAction func uploadBtnPressed(_ sender: Any) {
         
-//        var parameter :[String:Any] = [songForButton.joined(separator: ","):songForButton.joined(separator: ",")]
-//        
-//            Alamofire.request("http://38.88.74.83/cpen291-project2/dataTest.txt", method: .post, parameters: parameter, encoding: JSONEncoding.default).responseJSON { (response:DataResponse<Any>) in
-//                
-//                switch(response.result) {
-//                    
-//                case .success(_):
-//                    
-//                    if response.result.value != nil{
-//                        
-//                    break
-//                        
-//                    print(response.result.error!)
-//                    
-//                    break
-//                    
-//                
-//                    
-//                    }
-//                
-//                default: print("FUK")
-//                }
-//            }
-//                
                 }
-    
+
+    //transferring variables to next screen
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "fromMainLaunchPadToChangeSound"  {
             let changeSoundController = segue.destination as? ChangeSoundViewController
